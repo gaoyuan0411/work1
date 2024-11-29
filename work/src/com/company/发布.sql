@@ -73,3 +73,4 @@ CREATE TABLE `dws__tala__open_live_visit_event_stat__da__full`
     `stat_time`               VARCHAR(50) NULL COMMENT '统计处理时间'
 ) ENGINE=OLAP UNIQUE KEY(`stat_date`, `period_type_code`, `identity`, `live_id`, `country_name`, `replay_flag`, `province_id`, `city_id`, `area_id`, `school_id`, `product_code`, `product_platform`, `platform`) COMMENT '公开直播-直播播放浏览周期统计表'
     PARTITION BY RANGE(`stat_date`) ()
+
