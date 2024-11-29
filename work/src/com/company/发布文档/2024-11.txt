@@ -1,0 +1,17 @@
+学校管理台 教学&教研活动
+任务流： 应用分析-教学活动用户明细数据 应用分析-教研活动用户明细数据
+接口：
+school/teaching_research/user_detail
+school/teaching_analysis/student_detail
+school/teaching_analysis/teacher_detail
+school/teaching_research/dim_subject
+
+教师画像加积分
+v1/teacher_portrait/incentive
+
+民族
+screen/v1/nation_screen/area/site
+screen/v1/nation_screen/area/hundred_pv
+screen/v1/nation_screen/area/pv
+screen/v1/nation_screen/area/trend/pv
+screen/v1/nation_screen/area/hour_pv

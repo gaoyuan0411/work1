@@ -1,0 +1,86 @@
+{
+  "identities": {
+    "$identity_cookie_id": "187ffa916e9a44-0d278a91f1d01a-7a545474-2304000-187ffa916ea842"
+  },
+  "distinct_id": "187ffa916e9a44-0d278a91f1d01a-7a545474-2304000-187ffa916ea842",
+  "lib": {
+    "$lib": "js",
+    "$lib_method": "code",
+    "$lib_version": "1.24.10"
+  },
+  "properties": {
+    "$timezone_offset": -480,
+    "$screen_height": 1200,
+    "$screen_width": 1920,
+    "$viewport_height": 1050,
+    "$viewport_width": 968,
+    "$lib": "js",
+    "$lib_version": "1.24.10",
+    "$latest_traffic_source_type": "直接流量",
+    "$latest_search_keyword": "未取到值_直接打开",
+    "$latest_referrer": "",
+    "$device_id": "187ffa916e9a44-0d278a91f1d01a-7a545474-2304000-187ffa916ea842",
+    "identity": "游客",
+    "application_id": "smartedu_web",
+    "event_type": "clickEvent",
+    "channel_code": "mentalHealth",
+    "channel_name": "心理健康",
+    "sequence": 21,
+    "seq_salt": 7771016,
+    "event_session_id": "e3131e5c-d145-4d87-9db9-ca733bcd7298-1723201458534",
+    "$is_first_day": false,
+    "$url": "https://www.smartedu.cn/mentalHealth",
+    "$title": "国家智慧教育公共服务平台"
+  },
+  "anonymous_id": "187ffa916e9a44-0d278a91f1d01a-7a545474-2304000-187ffa916ea842",
+  "type": "track",
+  "event": "sec_channel_click",
+  "time": 1723201601745,
+  "_track_id": 517181746,
+  "_flush_time": 1723201601746,
+  "event_data": {
+  "nduser_id": "452603579224",
+  "owned_role": "TEACHER",
+  "__os": "iOS",
+  "__network_type": "WIFI",
+  "__wifi": true,
+  "channel_code": "",
+  "__screen_height": 844,
+  "event_session_id": "9D09BEF2-2466-4FC3-BE33-DF897B910376-1723025108467",
+  "__viewport_height": 753,
+  "event_type": "clickEvent",
+  "__device_id": "702D0684-E33E-42FC-8970-7663074B5A79",
+  "identity": "老师",
+  "__latest_search_keyword": "未取到值_直接打开",
+  "__app_id": "com.dianjiao.eduyun",
+  "__url": "https://www.smartedu.cn/special/Column",
+  "__latest_referrer": "",
+  "channel_name": "2024年暑假教师研修",
+  "__os_version": "17.5.1",
+  "build_version": "5579187",
+  "__is_first_day": false,
+  "__model": "iPhone13,2",
+  "__viewport_width": 390,
+  "__screen_width": 390,
+  "application_id": "xstudy_ios",
+  "__app_version": "6.1.8",
+  "__lib": "js",
+  "sequence": 7,
+  "__app_name": "智慧教育",
+  "__title": "国家智慧教育公共服务平台",
+  "seq_salt": 1038233,
+  "__timezone_offset": -480,
+  "__lib_version": "1.24.10",
+  "__latest_traffic_source_type": "直接流量",
+  "__manufacturer": "Apple"
+}
+}
+;
+//set hive.exec.reducers.max=80;
+//set hive.tez.container.size=3072;
+//set tez.grouping.split-count=80;
+//select get_json_object(properties,'$.channel_code')as channel_code,get_json_object(properties,'$.channel_name') as channel_name
+//from nddc.ods__event_data_detail_v2 t
+//where dt between '2024-08-07' and '2024-08-09'
+//and event='sec_channel_click'
+//group by get_json_object(properties,'$.channel_code'),get_json_object(properties,'$.channel_name')

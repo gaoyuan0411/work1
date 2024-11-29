@@ -1,0 +1,22 @@
+修改任务流：
+1、学校画像（提问、家校共育、活动、教研活动）--》教学活动参与情况-ads__school_portrait__teaching_activity_lively__stat__d  没有调整依赖  修改逻辑 需要将uat数据复制数据到nddc  然后跑当天数据
+    复制数据：INSERT OVERWRITE TABLE nddc.ads__school_portrait__teaching_activity_lively__stat__d PARTITION (dt)
+    select * from nddc_uat.ads__school_portrait__teaching_activity_lively__stat__d t where dt>='2024-06-10'
+2、资源画像-访问偏好 --》dwd_资源明细数据-dwd__rp__resource_info__dd__full 没有调整依赖 修改逻辑  需要将uat数据复制数据到nddc 然后跑当天数据
+    复制数据：INSERT OVERWRITE TABLE nddc.ads__resource_portrait__resource_visit__d PARTITION (period_code)
+     select * from nddc_uat.ads__resource_portrait__resource_visit__d t
+3、民族司大屏 --》雷达图数据-ads__nation__province_stat__d    修改逻辑 跑当天数据
+         增加依赖：ads__platform_tag_stat__d，ads__platform_area_stat__d （QT迁移 --》 23-pv-ADS --》 ads__platform_area_stat__d & ads__platform_tag_stat__d）
+         ，dws__pv__event_stat__dy__incr（03.CDM层数据清洗和计算 --》 23-pv-页面浏览域-神策 --》dws__pv__event_stat__dy__incr）
+         删除依赖：ads_zxx_biz_province_stat_d、ads_zxx_biz_channel_province_stat_d（QT迁移 --》 QT-ADS2Mysql-day --》 ads_zxx_biz_province_stat_d & ads_zxx_biz_channel_province_stat_d）
+新增任务流：
+4、试点地区  依赖和民族司一样 需更改参数 跑当天数据
+  需要创建表：create table nddc.ads__regin_screen__radar__d like nddc_uat.ads__regin_screen__radar__d
+增加依赖dws__ri__area_share_stat__dd__full_v2
+删除依赖：dws__ri__area_share_stat__da__full_v2
+
+发布接口：
+1、修改：实时大屏涉及pvuv接口
+https://docs.qq.com/sheet/DTGlPR0J0ZkJXV0xL?tab=BB08J2&_t=1717050973781&u=3cbc7df02bd84818889b416a76ab845c
+2、新增 试点地区接口
+新增api分组 新增api

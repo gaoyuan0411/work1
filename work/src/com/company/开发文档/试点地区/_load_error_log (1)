@@ -1,0 +1,4 @@
+Reason: actual column number is less than schema column number.actual number: 8, column separator: [], line delimiter: [
+], schema number: 12; . src line [2024452715975409594033008591594033009516-12024-07-01 15:24:35.1022024-06-30 ᴅᴀʏ̆̈]; 
+Reason: actual column number is less than schema column number.actual number: 5, column separator: [], line delimiter: [
+], schema number: 12; . src line [青海省西宁市\N15.600000]; 

@@ -1,0 +1,94 @@
+{
+  "tags": [
+    {
+      "tag": "普通群",
+      "types": "0"
+    },
+    {
+      "tag": "师生群",
+      "types": "8"
+    },
+    {
+      "tag": "家校群",
+      "types": "9"
+    },
+    {
+      "tag": "教研群",
+      "types": "11,10,12,33,34"
+    },
+    {
+      "tag": "工作群",
+      "types": "32"
+    }
+  ],
+  "types": [
+    {
+      "type": "0",
+      "name": "普通群",
+      "color": "#09BFB1",
+      "border_color": "rgba(9, 191, 177, 0.50)",
+      "icon": "https://bdcs-file-1.ykt.cbern.com.cn/bdxcloud/icon/group_normal.png"
+    },
+    {
+      "type": "8",
+      "name": "师生群",
+      "color": "#4196FF",
+      "border_color": "rgba(65, 150, 255, 0.50)",
+      "icon": "https://bdcs-file-2.ykt.cbern.com.cn/bdxcloud/icon/group_class.png"
+    },
+    {
+      "type": "9",
+      "name": "家校群",
+      "color": "#FF7801",
+      "border_color": "rgba(255, 120, 38, 0.50)",
+      "icon": "https://bdcs-file-1.ykt.cbern.com.cn/bdxcloud/icon/group_school.png"
+    },
+    {
+      "type": "10",
+      "name": "名师工作室",
+      "color": "#4196FF",
+      "border_color": "rgba(65, 150, 255, 0.50)",
+      "icon": "https://bdcs-file-2.ykt.cbern.com.cn/bdxcloud/icon/group_studio.png"
+    },
+    {
+      "type": "11",
+      "name": "教研群",
+      "color": "#4196FF",
+      "border_color": "rgba(65, 150, 255, 0.50)",
+      "icon": "https://bdcs-file-1.ykt.cbern.com.cn/bdxcloud/icon/group_teaching.png"
+    },
+    {
+      "type": "12",
+      "name": "专家工作室",
+      "color": "#4196FF",
+      "border_color": "rgba(65, 150, 255, 0.50)",
+      "icon": "https://bdcs-file-2.ykt.cbern.com.cn/bdxcloud/icon/group_studio.png"
+    },
+    {
+      "type": "33",
+      "name": "区域教研群",
+      "color": "#4196FF",
+      "border_color": "rgba(65, 150, 255, 0.50)",
+      "icon": "https://bdcs-file-1.ykt.cbern.com.cn/bdxcloud/icon/group_teaching_area.png"
+    },
+    {
+      "type": "34",
+      "name": "学校教研群",
+      "color": "#4196FF",
+      "border_color": "rgba(65, 150, 255, 0.50)",
+      "icon": "https://bdcs-file-2.ykt.cbern.com.cn/bdxcloud/icon/group_teaching_school.png"
+    },
+    {
+      "type": "32",
+      "name": "工作群",
+      "color": "#FFB800",
+      "border_color": "rgba(255, 184, 0, 0.50)",
+      "icon": "https://bdcs-file-1.ykt.cbern.com.cn/bdxcloud/icon/group_work.png"
+    }
+  ]
+}
+；
+{"t.stat_date": "2024-08-02", "t.user_identity": "STUDENT", "t.province_id": 0, "t.province_name": "全国", "t.city_id": 0, "t.city_name": "全部", "t.area_id": 0, "t.area_name": "全部", "t.school_id": 0, "t.school_name": "全部", "t.area_type": "all", "t.user_count": 70162170, "t.new_user_count": 38826, "t.update_time": "2024-08-03 09:54:19", "t.dt": "2024-08-02"}
+[INFO] 2024-09-27 17: 32: 14.007 [TaskLogInfo- - [taskAppId=TASK-12647601104832_4-784791-1674018]]  - row 2: {"t.stat_date": "2024-08-02", "t.user_identity": "TEACHER", "t.province_id": 0, "t.province_name": "全国", "t.city_id": 0, "t.city_name": "全部", "t.area_id": 0, "t.area_name": "全部", "t.school_id": 0, "t.school_name": "全部", "t.area_type": "all", "t.user_count": 20859661, "t.new_user_count": 4306, "t.update_time": "2024-08-03 09:54:19", "t.dt": "2024-08-02"}
+[INFO] 2024-09-27 17: 32: 14.007 [TaskLogInfo- - [taskAppId=TASK-12647601104832_4-784791-1674018]]  - row 3: {"t.stat_date": "2024-08-02", "t.user_identity": "all", "t.province_id": 0, "t.province_name": "全国", "t.city_id": 0, "t.city_name": "全部", "t.area_id": 0, "t.area_name": "全部", "t.school_id": 0, "t.school_name": "全部", "t.area_type": "all", "t.user_count": 121513997, "t.new_user_count": 69542, "t.update_time": "2024-08-03 09:54:19", "t.dt": "2024-08-02"
+}

@@ -1,0 +1,54 @@
+教材下的外链要转成文档
+精品课下：实验视频数+微课视频数 不等于视频数 视频数多3个
+经查询得 有三条视频数据在页面上找不到
+  with   resource_info AS (
+         SELECT *,
+                CASE
+                    WHEN cct.channel_code = 'course' AND cct.lesson_type = 'national_lesson' THEN 'course_national'
+                    WHEN cct.channel_code = 'course' AND cct.lesson_type = 'elite_lesson' THEN 'course_elite'
+                    ELSE cct.channel_code END        AS show_channel_code
+         FROM (SELECT *
+               FROM nddc.dim__talr__channel_content
+               WHERE dt = '${biz_date}'
+                 AND site_type = 'zxx'
+                 AND product_code = 'zxx'
+                 AND content_type IS NOT NULL
+                 AND has_parent_resource IS NOT NULL
+                 AND content_standard_sub_type IS NOT NULL
+                 AND content_status = 1
+                 AND content_type = 'resource'
+                 AND unational_quality_course = 0
+                 AND channel_code IN
+                     ('course', 'basicWork', 'experiment', 'eduReform', 'family', 'schoolService', 'sedu', 'sport',
+                      'teacherTraining',
+                      'localChannel', 'art', 'labourEdu', 'prepare_lesson', 'tchMaterial', 'resourceProvider')
+
+              ) cct
+
+     )
+
+              SELECT distinct ri.*
+         FROM resource_info ri
+                  left  JOIN (
+             SELECT DISTINCT t3.resource_id, t3.tag, t1.title
+             FROM (
+                      SELECT *
+                      FROM nddc.ods__auxo_tag__e_view_tag__mysql__full evt
+                      WHERE evt.dt = '${biz_date}'
+                        AND evt.parent_id = 'bklx'
+                        -- AND evt.title IN ( '微课视频','实验视频')
+                  ) t1
+                      INNER JOIN (
+                 SELECT *
+                 FROM (
+                          SELECT resource_id, tag_ids
+                          FROM nddc.dwt__talr__ndr_container_resource_relation__d__full pcrt
+                          WHERE dt = '${biz_date}'
+                            AND tenant_id = '1'
+                      ) t2
+                          LATERAL VIEW POSEXPLODE(tag_ids) t AS pos, tag
+             ) t3 ON t1.tag_id = t3.tag
+         ) t4 ON ri.robject_id = t4.resource_id
+         where ri.show_channel_code='course_elite'
+         and t4.title is null
+        -- group by t4.title,ri.show_channel_code

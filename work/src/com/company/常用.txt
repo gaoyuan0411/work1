@@ -1,0 +1,60 @@
+set tez.queue.name=root.default;
+set hive.new.job.grouping.set.cardinality = 96;
+set tez.grouping.split-count=100;
+set hive.exec.reducers.max=150;
+set hive.support.concurrency=false;
+set hive.tez.container.size=10240;
+set tez.task.max.events=2500;
+-- 设置最大计数器数量为1500
+SET tez.counters.max=2500;
+-- 设置最大计数器组数量为600
+SET tez.counters.max.groups=2500;
+-- 用于控制MapReduce作业中允许的最大计数器数量。这个参数可以帮助你管理和优化MapReduce作业的性能和资源使用。
+set mapreduce.job.counters.max=2500;
+
+
+$[add_months(yyyy,-12)]-$[yyyy]V2
+$[add_months(yyyyMM-1,-1)]
+--计算字段最大字节数
+max(length(binary(字段)))
+
+--用户姓名加密
+CASE
+WHEN user_name IS NULL THEN NULL
+ELSE CASE
+         WHEN length(user_name) <= 2 THEN rpad(substr(user_name, 0, 1), length(user_name), '*')
+         ELSE concat(rpad(substr(user_name, 0, 1), length(user_name) - 1, '*'),
+                     substr(user_name, length(user_name), 1))
+    END END AS user_name
+
+select CASE
+WHEN '${phone}' IS NULL THEN NULL
+ELSE CASE
+         WHEN length('${phone}') <= 2 THEN rpad(substr('${phone}', 0, 1), length('${phone}'), '*')
+         ELSE concat(rpad(substr('${phone}', 0, 3), length('${phone}') - 4, '*'),
+                     substr('${phone}', length('${phone}')-3, 4))
+    END END AS phone
+DROP TEMPORARY FUNCTION IF EXISTS nd_uc_name_enc;
+CREATE TEMPORARY FUNCTION nd_uc_name_enc AS 'com.nd.udf.NdUcNameEncUDF' using jar 'hdfs://cmss/user/nddc/udf/nd-uc-udfdes-0.3.jar';
+
+    lb-doris-newprod.ops.ykt.eduyun.cn:8031
+
+    如果导出Doris有因为特殊字符导致无法导出的，可以调整参数自己定义行分隔符和列分隔符， 行默认是\x05 调整的参数是 -ld "\\x02" 列参数是 -cs
+
+    <if test="end_date &gt;= stat_date" >
+    select '当前'
+    </if>
+    <if test="end_date &lt; stat_date " >
+    select '历史'
+    </if>
+
+    任务流负责人 手机号名单：https://docs.qq.com/sheet/DUVdVeGZDVUxPblJr?tab=BB08J2
+
+    拆解json
+  SELECT
+        user_id,
+        sum(get_json_object(visit_info, '$.count')) AS terminal_count
+    FROM
+        nddc.ads__portrait__tt__train_su__dd__full
+   lateral view explode(split(regexp_replace(regexp_replace(visit_terminal_info, '\\[|\\]', ''), '\\}\\,\\{', '\\}\\;\\{'), '\\;')) b as visit_info
+    WHERE dt = '${biz_date}'

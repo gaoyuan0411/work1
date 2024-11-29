@@ -1,0 +1,40 @@
+1030:
+教学活动分析：
+  作业-至今维度
+
+1110:
+教学活动分析：
+  除作业外的其他教学活动-至今维度和过去x天维度
+  作业活动-过去x天维度
+教研活动分析
+
+1120:
+教学活动分析：
+  除至今和过去x天维度外的其他时间维度
+教学功能分析:
+  至今维度和过去x天维度
+
+1130:
+教学功能分析:
+  除至今和过去x天维度外的其他时间维度
+
+  dim_zxx_subject_code_ref
+            select distinct  '2',subject_code,subject_name from nddc.dim_subject_ref where subject_code not like '$%'
+            union all
+            select  '3',subject_code, subject_name from nddc.dim_zxx_subject_code_ref
+
+594034027459	东方市第一小学
+594034096106	海口市第四中学
+594033703317	海南省文昌中学
+594033110896	文昌市实验中学
+
+{
+  "period_code":"202410",
+  "period_type_code":"30",
+  "period_end_date":"2024-10-31",
+  "stat_date":"2024-11-04",
+  "school_id":"594034096106",
+  "activity_type":"habit",
+  "activity_internal_type":"ALL",
+  "subject_code":"ALL"
+}

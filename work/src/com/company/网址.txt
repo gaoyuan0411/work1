@@ -1,0 +1,33 @@
+终端访问【https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/eduPlatReview/terminalAccess】
+学生学习【https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/eduPlatReview/studentLearning】
+民族地区【https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/nationReviewV2】
+平台访问【https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/eduPlatReview/platformAccess】
+首屏【https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/eduPlatReview/home】
+蓝屏-国家智慧教育平台运行数据实况https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/educationData
+蓝屏-国家智慧教育门户运行数据实况		https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/educationPortal
+蓝屏-国家中小学智慧教育平台运行数据实况	https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/schoolReview
+蓝屏-国家智慧教育读书平台数据运行实况	https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/readingReview
+蓝屏-中国语言文字数字博物馆运行数据实况	https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/characterReview
+蓝屏-国家智慧教育平台民族地区运行实况	https://x-edu-big-screen-11-test1.ykt.eduyun.cn/bigScreen/nationReview
+教师培训	资源浏览趋势		            https://stat-test1.ykt.eduyun.cn/train
+运营分析	活跃分析	                    https://stat-test1.ykt.eduyun.cn/operation
+
+set hive.new.job.grouping.set.cardinality = 96;
+set tez.grouping.split-count=100;
+set hive.exec.reducers.max=150;
+set hive.support.concurrency=false;
+set hive.tez.container.size=10240;
+set tez.task.max.events=2500;
+-- 设置最大计数器数量为1500
+SET tez.counters.max=2500;
+-- 设置最大计数器组数量为600
+SET tez.counters.max.groups=2500;
+-- 用于控制MapReduce作业中允许的最大计数器数量。这个参数可以帮助你管理和优化MapReduce作业的性能和资源使用。
+set mapreduce.job.counters.max=2500;
+
+
+
+
+
+
+
