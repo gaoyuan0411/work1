@@ -1,0 +1,168 @@
+平台访问：高远（页面浏览）
+教师研修：高远（应用分析-教研活动分析）
+备课教学：高远（应用分析-教学活动分析）
+学生学习：高远（应用分析-教学活动分析）
+
+用户注册：鹏辉（用户注册）
+协同治理：鹏辉（协同治理）
+
+资源应用：治港（资源结构）
+学校积分：治港（积分分析）
+区域积分：治港（积分分析-区域积分）
+
+dim__whole_area
+594033008597  新疆生产建设兵团
+594033008595  新疆维吾尔自治区
+594036070527  澳门特别行政区
+594036070519  香港特别行政区
+594036070473  台湾省
+594036056566  智慧阳光学校
+平台访问：高远（页面浏览）
+v1/application_cockpit/page_view/heat_map
+594033008565 河南
+594033008571 广东
+  and province_id != 594033008597
+{
+  "period_type_code":99,必填，统计周期编码，10：日；21：过去7日；22：过去14日；31:过去30天；99：至今,
+  "parent_id": 0,,// 父级地区编码，0：全国，点击节点下钻时传返回对象中的region_id
+  "area_type": 'city',// 地区类型，默认为all，点击下钻时传返回对象中的area_type，all：全国；province：省；city：市；area：县；school：学校,，
+  "area_view": 'province',// 地区视图，默认为province，省级视图：默认为province，市级视图：city，
+}
+parent_id=0
+{
+  "period_type_code":99,
+  "parent_id": 0,
+  "area_type": 'all',
+  "area_view": 'province'
+}
+{
+  "period_type_code":99,
+  "parent_id": 0,
+  "area_type": 'all',
+  "area_view": 'city'
+}
+DENSE_RANK
+教师研修：高远（应用分析-教研活动分析）
+teaching_research
+备课教学：高远（应用分析-教学活动分析）
+prepare_lesson
+学生学习：高远（应用分析-教学活动分析）
+student_learning
+('homework','course-schedule', 'habit', 'vote', 'score','assessment', 'afterclass')
+
+select * from (select a.*,
+ROW_NUMBER() over(
+    ORDER BY total_resource_count desc
+) as rank
+from (SELECT
+
+,sum(trash_resource_count) as trash_resource_count
+from ads__talr__library_teaching_material_stat__dd
+ WHERE period_type_code = #{period_type_code}
+
+) a
+) b
+ where b.rank BETWEEN  (20 *(#{page_no}-1)+1) and (20 * #{page_no})+1)
+
+
+LIMIT (#{page_no}*20) ,20
+
+
+select a.*
+,b.tal_pag_num
+from
+(select * from (SELECT school_name,publish_count,
+ ROW_NUMBER() over(
+    ORDER BY publish_count desc
+) as rk
+from ads__region_app__teaching_research__activity_overview_stat_d t
+where 1=1
+and period_code='ALL'
+and area_type='school'
+and activity_type='teaching-training'
+and group_type_code='11'
+and activity_mode_type='ALL'
+
+  ) c where rk <=20) a join
+  (
+SELECT CEIL(COUNT(*)/20) as tal_pag_num
+from ads__region_app__teaching_research__activity_overview_stat_d t
+where 1=1
+and period_code='ALL'
+and area_type='school'
+and activity_type='teaching-training'
+and group_type_code='11'
+and activity_mode_type='ALL'
+) b
+
+,a.code
+
+
+  ,`code`
+  ,parent_area_id
+  ,IF(parent_area_id=0,'全国',parent_short_name) as parent_short_name
+  ,CASE area_level when 1 then 'province'
+  when 2 then 'city'
+  else 'area' end as area_type
+  from dim__whole_area t
+where 1=1
+    and province_id != 594033008597
+<if test=" area_view == 'province' ">
+   and area_level=1
+</if>
+<if test=" area_view == 'city' ">
+   and area_level=2
+</if>
+<if test=" area_type == 'city' ">
+   and area_level=3
+</if>
+and t.area_tag='NORMAL'
+GROUP by area_id,short_name,area_level,`code`
+
+a.area_id as region_id
+,a.name as region_name
+,a.short_name as region_short_name
+,a.code
+,a.parent_area_id as parent_id
+,a.parent_name
+,a.parent_short_name as parent_short_name
+,a.area_type
+,a.is_leaf
+
+select area_id
+  ,short_name
+  ,name
+  ,`code`
+  ,a1.parent_area_id
+  ,IF(a1.parent_area_id=0,'全国',parent_short_name) as parent_short_name
+  ,IF(a1.parent_area_id=0,'全国',parent_area_name) as parent_name
+  ,CASE area_level when 1 then 'province'
+  when 2 then 'city'
+  else 'area' end as area_type
+  ,IF(nvl(a2.area_num,0)=0,1,0) as is_leaf
+  from (select * from bd_visit.dim__whole_area t
+where 1=1
+<if test=" area_view == 'province' ">
+   and area_level=1
+</if>
+<if test=" area_view == 'city' ">
+   and area_level=2
+</if>
+<if test=" area_type == 'city' ">
+   and area_level=3
+</if>
+and t.area_tag='NORMAL'
+        ) a1 left join
+  (
+  select parent_area_id,count(*) as area_num from bd_visit.dim__whole_area
+where 1=1
+<if test=" area_view == 'province' ">
+   and area_level=2
+</if>
+<if test=" area_view == 'city' ">
+   and area_level=3
+</if>
+and area_tag='NORMAL'
+    GROUP by parent_area_id
+  ) a2 on a1.area_id=a2.parent_area_id
+

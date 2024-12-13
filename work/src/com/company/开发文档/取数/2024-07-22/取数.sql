@@ -1,132 +1,72 @@
---智育('basicWork','exercises','experiment','course','prepare_lesson')
---体美劳育('labourEdu','art','sport')
---德育 sedu
---转发资源次数
-SELECT *
-     , ROW_NUMBER() OVER (PARTITION BY period_code,map_channel_name ORDER BY share_total_count DESC ) AS rk
-FROM (
-         SELECT period_code,
-                CASE
-                    WHEN channel_code IN ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson') THEN '智育'
-                    WHEN channel_code IN ('labourEdu', 'art', 'sport') THEN '体美劳育'
-                    ELSE channel_name END AS map_channel_name,
-                channel_code,
-                channel_name,
-                resource_id,
-                resource_name,
-                share_total_count
-         FROM nddc.ads__ri__area_share_object_rank2__d__full
-         WHERE period_type_code = '30'
-           AND period_code BETWEEN '202402' AND '202406'
-           AND province_id = '0'
-           AND (
-                     city_id = 0
-                 OR city_id IS NULL
-             )
-           AND object_type = 'resource'
-           AND share_method = 'ALL'
-           AND resource_id != 'ALL'
-           AND x_product_id = 'e5649925-441d-4a53-b525-51a2f1c4e0a8'
-           AND channel_code IN
-               ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson', 'labourEdu', 'art', 'sport', 'sedu')
-     ) t
-HAVING rk <= 10
-;
---点赞资源数据
-SELECT *
-FROM (
-         SELECT t.*, ROW_NUMBER() OVER (PARTITION BY period_code,map_channel_name ORDER BY like_count DESC ) AS rk
-         FROM (SELECT a.period_code,
-                      CASE
-                          WHEN b.channel_code IN
-                               ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson') THEN '智育'
-                          WHEN b.channel_code IN ('labourEdu', 'art', 'sport') THEN '体美劳育'
-                          ELSE b.channel_name END AS map_channel_name,
-                      a.like_object_id,
-                      b.content_title,
-                      b.channel_code,
-                      b.channel_name,
-                      a.like_count
-               FROM (SELECT like_object_id,
-                            DATE_FORMAT(like_created_date, 'yyyyMM') AS period_code,
-                            SUM(like_count)                             like_count
-                     FROM nddc.dwm__ri__user_like__dd__incr_v2
-                     WHERE like_created_date BETWEEN '2024-02-01' AND '2024-06-31'
-                       AND x_product_id = 'e5649925-441d-4a53-b525-51a2f1c4e0a8'
-                     GROUP BY like_object_id, DATE_FORMAT(like_created_date, 'yyyyMM')
-                    ) a
-               INNER JOIN (SELECT robject_id, content_title, channel_code, channel_name
-                                    FROM nddc.dim__talr__channel_content t
-                                    WHERE dt = '2024-05-05'
-                                      AND channel_code IN
-                                          ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson',
-                                           'labourEdu', 'art', 'sport',
-                                           'sedu')
-                                    GROUP BY robject_id, content_title, channel_code, channel_name
-               ) b ON a.like_object_id = b.robject_id
-              ) t
-     ) c
-WHERE rk <= 10
-;
---收藏资源数据
-SELECT *
-FROM (
-         SELECT *,
-                ROW_NUMBER() OVER (PARTITION BY period_code,map_channel_name ORDER BY favorite_total_count DESC ) AS rk
-         FROM (
-                  SELECT DATE_FORMAT(favorite_create_date, 'yyyyMM') AS period_code,
-                         CASE
-                             WHEN content_channel_code IN
-                                  ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson') THEN '智育'
-                             WHEN content_channel_code IN ('labourEdu', 'art', 'sport') THEN '体美劳育'
-                             ELSE content_channel_name END           AS map_channel_name,
-                         content_robject_id,
-                         content_title,
-                         content_channel_code,
-                         content_channel_name,
-                         SUM(favorite_total_count)                      favorite_total_count
-                  FROM nddc.dwm__ri__favorite_channel__dn__full
-                  WHERE dt = '${full_biz_date}'
-                    AND favorite_create_date BETWEEN '2024-02-01' AND '2024-06-31'
-                    AND x_product_id = 'e5649925-441d-4a53-b525-51a2f1c4e0a8'
-                    AND content_channel_code IN
-                        ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson',
-                         'labourEdu', 'art', 'sport',
-                         'sedu')
-                  GROUP BY content_robject_id, content_title, content_channel_code, content_channel_name,
-                           DATE_FORMAT(favorite_create_date, 'yyyyMM')
-              ) a
-     ) b
-WHERE rk <= 10
-;
---评价资源数据
-SELECT *
-FROM (
-         SELECT *,
-                ROW_NUMBER() OVER (PARTITION BY period_code,map_channel_name ORDER BY assessment_total_count DESC ) AS rk
-         FROM (
-                  SELECT DATE_FORMAT(assessment_create_date, 'yyyyMM') AS period_code,
-                         CASE
-                             WHEN content_channel_code IN
-                                  ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson') THEN '智育'
-                             WHEN content_channel_code IN ('labourEdu', 'art', 'sport') THEN '体美劳育'
-                             ELSE content_channel_name END             AS map_channel_name,
-                         content_robject_id,
-                         content_title,
-                         content_channel_code,
-                         content_channel_name,
-                         SUM(assessment_total_count)                      assessment_total_count
-                  FROM nddc.dwm__ri__assessment_channel__dn__full
-                  WHERE dt = '${full_biz_date}'
-                    AND assessment_create_date BETWEEN '2024-02-01' AND '2024-06-31'
-                    AND x_product_id = 'e5649925-441d-4a53-b525-51a2f1c4e0a8'
-                    AND content_channel_code IN
-                        ('basicWork', 'exercises', 'experiment', 'course', 'prepare_lesson',
-                         'labourEdu', 'art', 'sport',
-                         'sedu')
-                  GROUP BY content_robject_id, content_title, content_channel_code, content_channel_name,
-                           DATE_FORMAT(assessment_create_date, 'yyyyMM')
-              ) a
-     ) b
-WHERE rk <= 10
-
+CREATE TABLE `dwm__pv__event_detail__im__incr`
+(
+    `stat_date`        DATE NOT NULL COMMENT '分区-日期(yyyy-MM-dd)月份第一天',
+    `product_code`     VARCHAR(512) NULL COMMENT '产品编码',
+    `product_platform` VARCHAR(512) NULL COMMENT '产品所属端：按埋点的app_key区分，不区分web和h5',
+    `identity`         VARCHAR(512) NULL COMMENT '浏览时身份',
+    `language`         VARCHAR(512) NULL COMMENT '浏览语言',
+    `country_name`     VARCHAR(512) NULL COMMENT '所属国家名称',
+    `province_id`      BIGINT NULL COMMENT '所属省id',
+    `city_id`          BIGINT NULL COMMENT '所属市id',
+    `area_id`          BIGINT NULL COMMENT '所属区id',
+    `school_id`        BIGINT NULL COMMENT '所属学校编码',
+    `module_code`      VARCHAR(512) NULL COMMENT '模块编码',
+    `tag_code_1`       VARCHAR(512) NULL COMMENT '标签1编码',
+    `tag_code_2`       VARCHAR(512) NULL COMMENT '标签2编码',
+    `tag_code_3`       VARCHAR(512) NULL COMMENT '标签3编码',
+    `tag_code_4`       VARCHAR(512) NULL COMMENT '标签4编码',
+    `tag_code_5`       VARCHAR(512) NULL COMMENT '标签5编码',
+    `tag_code_6`       VARCHAR(512) NULL COMMENT '标签6编码',
+    `tag_code_7`       VARCHAR(512) NULL COMMENT '标签7编码',
+    `tag_code_8`       VARCHAR(512) NULL COMMENT '标签8编码',
+    `tag_code_9`       VARCHAR(512) NULL COMMENT '标签9编码',
+    `tag_code_10`      VARCHAR(512) NULL COMMENT '标签10编码',
+    `content_id`       VARCHAR(512) NULL COMMENT '内容id',
+    `user_id`          BIGINT NULL COMMENT '评分用户id',
+    `device_id`        VARCHAR(512) NULL COMMENT '设备id',
+    `content_type`     VARCHAR(512) NULL COMMENT '内容类型',
+    `app_key`          VARCHAR(512) NULL COMMENT '上报appkey',
+    `product_id`       VARCHAR(512) NULL COMMENT '产品标识',
+    `platform`         VARCHAR(512) NULL COMMENT '平台',
+    `module_name`      VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '模块名称',
+    `tag_name_1`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签1名称',
+    `tag_name_2`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签2名称',
+    `tag_name_3`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签3名称',
+    `tag_name_4`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签4名称',
+    `tag_name_5`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签5名称',
+    `tag_name_6`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签6名称',
+    `tag_name_7`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签7名称',
+    `tag_name_8`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签8名称',
+    `tag_name_9`       VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签9名称',
+    `tag_name_10`      VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '标签10名称',
+    `province_name`    VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '所属省名称',
+    `city_name`        VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '所属市名称',
+    `area_name`        VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '所属区名称',
+    `school_name`      VARCHAR(512) REPLACE_IF_NOT_NULL NULL COMMENT '所属学校名称',
+    `content_name`     VARCHAR(1024) REPLACE_IF_NOT_NULL NULL COMMENT '内容名称',
+    `tag_level`        INT REPLACE_IF_NOT_NULL NULL COMMENT '标签级别',
+    `is_new_device`    INT REPLACE_IF_NOT_NULL NULL DEFAULT "0" COMMENT '是否新设备: 0-否，1-是',
+    `visit_times`      BIGINT SUM NULL DEFAULT "0" COMMENT '访问次数',
+    INDEX idx_dwm_event_detail__id_identity (`identity`) USING INVERTED COMMENT '' 产品所属端索引 '',
+    INDEX idx_dwm_event_detail__id_language (`language`) USING INVERTED COMMENT '' 用户语言索引 '',
+    INDEX idx_dwm_event_detail__id_country (`country_name`) USING INVERTED COMMENT '' 所属国家名称索引 '',
+    INDEX idx_dwm_event_detail__id_module_code (`module_code`) USING INVERTED COMMENT '' 模块编码索引 '',
+    INDEX idx_dwm_event_detail__id_province_id (`province_id`) USING INVERTED COMMENT '' 所属省 id 索引 '',
+    INDEX idx_dwm_event_detail__id_city_id (`city_id`) USING INVERTED COMMENT '' 所属市 id 索引 '',
+    INDEX idx_dwm_event_detail__id_area_id (`area_id`) USING INVERTED COMMENT '' 所属区 id 索引 '',
+    INDEX idx_dwm_event_detail__id_school_id (`school_id`) USING INVERTED COMMENT '' 所属学校编码索引 '',
+    INDEX idx_dwm_event_detail__id_tag_code_1 (`tag_code_1`) USING INVERTED COMMENT '' 标签1编码索引 '',
+    INDEX idx_dwm_event_detail__id_tag_code_2 (`tag_code_2`) USING INVERTED COMMENT '' 标签2编码索引 '',
+    INDEX idx_dwm_event_detail__id_tag_code_3 (`tag_code_3`) USING INVERTED COMMENT '' 标签3编码索引 '',
+    INDEX idx_dwm_event_detail__id_tag_code_4 (`tag_code_4`) USING INVERTED COMMENT '' 标签4编码索引 '',
+    INDEX idx_dwm_event_detail__id_tag_code_5 (`tag_code_5`) USING INVERTED COMMENT '' 标签5编码索引 '',
+    INDEX idx_dwm_event_detail__id_tag_code_6 (`tag_code_6`) USING INVERTED COMMENT '' 标签6编码索引 '',
+    INDEX idx_dwm_event_detail__id_tag_code_7 (`tag_code_7`) USING INVERTED COMMENT '' 标签7编码索引 ''
+) ENGINE=OLAP AGGREGATE KEY(`stat_date`, `product_code`, `product_platform`, `identity`, `language`, `country_name`, `province_id`, `city_id`, `area_id`, `school_id`, `module_code`, `tag_code_1`, `tag_code_2`, `tag_code_3`, `tag_code_4`, `tag_code_5`, `tag_code_6`, `tag_code_7`, `tag_code_8`, `tag_code_9`, `tag_code_10`, `content_id`, `user_id`, `device_id`, `content_type`, `app_key`, `product_id`, `platform`) COMMENT '页面浏览域-实时月中间聚合表' PARTITION BY RANGE(`stat_date`) (PARTITION p202409 VALUES [('2024-09-01'), ('2024-10-01')), PARTITION p202410 VALUES [('2024-10-01'), ('2024-11-01')), PARTITION p202411 VALUES [('2024-11-01'), ('2024-12-01')), PARTITION p202412 VALUES [('2024-12-01'), ('2025-01-01')), PARTITION p202501 VALUES [('2025-01-01'), ('2025-02-01')), PARTITION p202502 VALUES [('2025-02-01'), ('2025-03-01'))) DISTRIBUTED BY HASH(`device_id`) BUCKETS 12 PROPERTIES ( "replication_allocation" = "tag.location.default: 3", "min_load_replica_num" = "-1", "is_being_synced" = "false", "dynamic_partition.enable" = "true", "dynamic_partition.time_unit" = "MONTH", "dynamic_partition.time_zone" = "Asia/Shanghai", "dynamic_partition.start" = "-80", "dynamic_partition.end" = "2", "dynamic_partition.prefix" = "p", "dynamic_partition.replication_allocation" = "tag.location.default: 3", "dynamic_partition.buckets" = "10", "dynamic_partition.create_history_partition" = "true", "dynamic_partition.history_partition_num" = "3", "dynamic_partition.hot_partition_num" = "0", "dynamic_partition.reserved_history_periods" = "NULL", "dynamic_partition.storage_policy" = "", "dynamic_partition.start_day_of_month" = "1", "storage_medium" = "hdd", "storage_format" = "V2", "inverted_index_storage_format" = "V1", "light_schema_change" = "true", "disable_auto_compaction" = "false", "enable_single_replica_compaction" = "false", "group_commit_interval_ms" = "10000", "group_commit_data_bytes" = "134217728" );
+Content-Type
+APPLICATION/JSON
+请求参数示例
+{
+  "region_id":0
+}
+权限

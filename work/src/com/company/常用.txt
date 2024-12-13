@@ -58,3 +58,7 @@ CREATE TEMPORARY FUNCTION nd_uc_name_enc AS 'com.nd.udf.NdUcNameEncUDF' using ja
         nddc.ads__portrait__tt__train_su__dd__full
    lateral view explode(split(regexp_replace(regexp_replace(visit_terminal_info, '\\[|\\]', ''), '\\}\\,\\{', '\\}\\;\\{'), '\\;')) b as visit_info
     WHERE dt = '${biz_date}'
+
+    doris 获取月份第一天和最后一天
+   第一天 SELECT DATE_SUB(CURDATE(), INTERVAL (DAY(CURDATE()) - 1) DAY)
+    最后一天 SELECT DATE_SUB(ADD_MONTHS(DATE_SUB(CURDATE(), INTERVAL (DAY(CURDATE()) - 1) DAY),1),1)
